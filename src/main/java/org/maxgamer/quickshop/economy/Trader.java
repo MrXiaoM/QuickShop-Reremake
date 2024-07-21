@@ -135,6 +135,12 @@ public class Trader implements OfflinePlayer {
         return offlinePlayer.getBedSpawnLocation();
     }
 
+    @Nullable
+    @Override
+    public Location getRespawnLocation() {
+        return offlinePlayer.getRespawnLocation();
+    }
+
     @Override
     public void incrementStatistic(@NotNull Statistic statistic) throws IllegalArgumentException {
         offlinePlayer.incrementStatistic(statistic);
@@ -229,6 +235,12 @@ public class Trader implements OfflinePlayer {
     @Override
     public Location getLastDeathLocation() {
         return offlinePlayer.getLastDeathLocation();
+    }
+
+    @Nullable
+    @Override
+    public Location getLocation() {
+        return offlinePlayer.getLocation();
     }
 
     @Override
