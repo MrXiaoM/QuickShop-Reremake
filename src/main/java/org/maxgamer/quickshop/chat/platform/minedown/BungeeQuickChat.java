@@ -19,6 +19,7 @@
 
 package org.maxgamer.quickshop.chat.platform.minedown;
 
+import de.tr7zw.nbtapi.NBTItem;
 import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -154,14 +155,56 @@ public class BungeeQuickChat implements QuickChat {
         return builder;
     }
 
+    private BungeeComponentBuilder appendItemHoloChatNBTAPI(@Nullable ItemStack item, @NotNull String message) {
+        BungeeComponentBuilder builder = new BungeeComponentBuilder();
+        TextSplitter.SpilledString spilledString = TextSplitter.deBakeItem(message);
+        if (item == null) {
+            if (spilledString == null) {
+                builder.appendLegacy(message);
+            } else {
+                builder.appendLegacyAndItem(spilledString.getLeft()
+                        , spilledString.getComponents()
+                        , spilledString.getRight());
+            }
+        } else {
+            String nbt = NBTItem.convertItemtoNBT(item).getCompound().toString();
+            HoverEvent itemHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new TextComponent[]{new TextComponent(nbt)});
+            if (spilledString == null) {
+                builder.event(itemHoverEvent);
+                builder.appendLegacy(message);
+                //Dummy for not included hover event
+                builder.append(new TextComponent());
+                builder.event((HoverEvent) null);
+            } else {
+                //Only show item on item name side
+                for (BaseComponent component : spilledString.getComponents()) {
+                    component.setHoverEvent(itemHoverEvent);
+                }
+                builder.appendLegacyAndItem(spilledString.getLeft()
+                        , spilledString.getComponents()
+                        , spilledString.getRight());
+            }
+        }
+        return builder;
+    }
+
     private void sendItemHologramChat(@NotNull Player player, @NotNull String text, @NotNull ItemStack itemStack, boolean skipItemHoloChat) {
         TextComponent errorComponent = new TextComponent(plugin.text().of(player, "menu.item-holochat-error").forLocale());
         try {
             BungeeComponentBuilder builder;
-            if (skipItemHoloChat) {
-                builder = appendItemHoloChat(null, text);
+
+            if (plugin.getNbtapi() != null) {
+                if (skipItemHoloChat) {
+                    builder = appendItemHoloChatNBTAPI(null, text);
+                } else {
+                    builder = appendItemHoloChatNBTAPI(itemStack, text);
+                }
             } else {
-                builder = appendItemHoloChat(ReflectFactory.convertBukkitItemStackToJson(itemStack), text);
+                if (skipItemHoloChat) {
+                    builder = appendItemHoloChat(null, text);
+                } else {
+                    builder = appendItemHoloChat(ReflectFactory.convertBukkitItemStackToJson(itemStack), text);
+                }
             }
             BaseComponent[] result = builder.create();
             String resultStr = ComponentSerializer.toString(result);
@@ -193,10 +236,19 @@ public class BungeeQuickChat implements QuickChat {
         TextComponent errorComponent = new TextComponent(plugin.text().of(player, "menu.item-holochat-error").forLocale());
         try {
             BungeeComponentBuilder builder;
-            if (skipItemHoloChat) {
-                builder = appendItemHoloChat(null, message);
+
+            if (plugin.getNbtapi() != null) {
+                if (skipItemHoloChat) {
+                    builder = appendItemHoloChatNBTAPI(null, message);
+                } else {
+                    builder = appendItemHoloChatNBTAPI(itemStack, message);
+                }
             } else {
-                builder = appendItemHoloChat(ReflectFactory.convertBukkitItemStackToJson(itemStack), message);
+                if (skipItemHoloChat) {
+                    builder = appendItemHoloChat(null, message);
+                } else {
+                    builder = appendItemHoloChat(ReflectFactory.convertBukkitItemStackToJson(itemStack), message);
+                }
             }
             if (QuickShop.getPermissionManager().hasPermission(player, "quickshop.preview")) {
                 //Skip the previous component, avoid it was applied with click event
