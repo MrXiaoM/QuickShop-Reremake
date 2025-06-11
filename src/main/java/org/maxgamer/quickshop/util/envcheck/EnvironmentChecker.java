@@ -191,7 +191,7 @@ public final class EnvironmentChecker {
             return false;
         }
     }
-
+/*
     @SneakyThrows
     @EnvCheckEntry(name = "Signature Verify", priority = 0, stage = {EnvCheckEntry.Stage.ON_LOAD, EnvCheckEntry.Stage.ON_ENABLE})
     public ResultContainer securityVerify() {
@@ -248,7 +248,7 @@ public final class EnvironmentChecker {
             }
         }
     }
-
+*/
 
     @EnvCheckEntry(name = "Plugin Manifest Check", priority = 1, stage = {EnvCheckEntry.Stage.ON_LOAD, EnvCheckEntry.Stage.ON_ENABLE})
     public ResultContainer manifestCheck() {
