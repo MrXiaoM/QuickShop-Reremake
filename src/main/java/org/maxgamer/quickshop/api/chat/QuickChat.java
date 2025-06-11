@@ -69,7 +69,7 @@ public interface QuickChat {
      * @param message   The message with hover event
      * @return The component
      */
-    @NotNull QuickComponent getItemHologramChat(@NotNull Shop shop, @NotNull ItemStack itemStack, @NotNull Player player, @NotNull String message);
+    @NotNull QuickComponent getItemHologramChat(@NotNull Shop shop, @Nullable ItemStack itemStack, @NotNull Player player, @NotNull String message);
 
     /**
      * Create chat with hover-item to specified receiver

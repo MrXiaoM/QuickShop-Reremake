@@ -1270,7 +1270,12 @@ public class SimpleShopManager implements ShopManager, Reloadable {
         chatSheetPrinter.printLine(plugin.text().of(p, "menu.shop-information").forLocale());
         chatSheetPrinter.printLine(plugin.text().of(p, "menu.owner", shop.ownerName()).forLocale());
         // Enabled
-        plugin.getQuickChat().send(p, plugin.getQuickChat().getItemHologramChat(shop, items, p, ChatColor.DARK_PURPLE + plugin.text().of(p, "tableformat.left_begin").forLocale() + plugin.text().of(p, "menu.item", MsgUtil.getTranslateText(shop.getItem())).forLocale() + "  "));
+        String message = ChatColor.DARK_PURPLE + plugin.text().of(p, "tableformat.left_begin").forLocale() + plugin.text().of(p, "menu.item", MsgUtil.getTranslateText(shop.getItem())).forLocale() + "  ";
+        try {
+            plugin.getQuickChat().send(p, plugin.getQuickChat().getItemHologramChat(shop, items, p, message));
+        } catch (Throwable t) {
+            plugin.getQuickChat().send(p, plugin.getQuickChat().getItemHologramChat(shop, null, p, message));
+        }
         if (Util.isTool(items.getType())) {
             chatSheetPrinter.printLine(
                     plugin.text().of(p, "menu.damage-percent-remaining", Util.getToolPercentage(items)).forLocale());

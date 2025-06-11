@@ -180,11 +180,11 @@ public class BungeeQuickChat implements QuickChat {
     }
 
     @Override
-    public @NotNull QuickComponent getItemHologramChat(@NotNull Shop shop, @NotNull ItemStack itemStack, @NotNull Player player, @NotNull String message) {
+    public @NotNull QuickComponent getItemHologramChat(@NotNull Shop shop, @Nullable ItemStack itemStack, @NotNull Player player, @NotNull String message) {
         return getItemHologramChat(shop, itemStack, player, message, false);
     }
 
-    private @NotNull QuickComponent getItemHologramChat(@NotNull Shop shop, @NotNull ItemStack itemStack, @NotNull Player player, @NotNull String message, boolean skipItemHoloChat) {
+    private @NotNull QuickComponent getItemHologramChat(@NotNull Shop shop, @Nullable ItemStack itemStack, @NotNull Player player, @NotNull String message, boolean skipItemHoloChat) {
         TextComponent errorComponent = new TextComponent(plugin.text().of(player, "menu.item-holochat-error").forLocale());
         try {
             BungeeComponentBuilder builder;
